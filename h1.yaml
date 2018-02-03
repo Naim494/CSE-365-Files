@@ -1,0 +1,35 @@
+---
+- hosts: hw1
+  become: true
+  user: ubuntu
+
+  tasks:
+    - name: Install the Apache webserver
+      apt:
+        name: apache2
+        update_cache: yes
+        state: latest
+
+    - name: Dowloads HW0.html to /var/www/html/index.html
+      get_url:
+        url: https://github.com/Naim494/CSE-365-Files/blob/master/hw0.html
+        headers: "Authorization:token 3a3f9cd854bdfa5e59077cca75d133c4c1bbb061,Accept:application/vnd.github.v3.raw"
+        dest: ~/var/www/html
+        notify:
+          - restart apache2
+
+
+    - name: Dowload naimStreet.jpg to /var/www/html/index.html
+      get_url:
+        url: https://github.com/Naim494/CSE-365-Files/blob/master/naimStreet.jpg
+        headers: "Authorization:token 3a3f9cd854bdfa5e59077cca75d133c4c1bbb061,Accept:application/vnd.github.v3.raw"
+        dest: ~/var/www/html
+        notify:
+          - restart apache2
+
+  handlers:
+    - name: restart apache2
+      service:
+        name: apache2
+        state: restarted
+
